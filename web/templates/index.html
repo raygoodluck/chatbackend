@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body %}
+<div>
+    <h1 style="text-align: center; margin:20px;">
+        Hello ChatGPT
+    </h1>
+</div>
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <pre>{{ data.answer }}</pre>
+    </div>
+
+    <div style="margin-top:20px;">
+        <input name="question" style="width: 500px;" value="{{ data.question }}" />
+        <input type="submit" value="Submit" />
+    </div>
+</form>
+{% endblock body %}
