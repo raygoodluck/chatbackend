@@ -5,15 +5,92 @@
         Hello ChatGPT
     </h1>
 </div>
-<form method="post">
-    {% csrf_token %}
-    <div>
-        <pre>{{ data.answer }}</pre>
-    </div>
+<div class="chat-window">
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <pre>{{ data.answer }}</pre>
+        </div>
+    
+        <div class="input-box">
+            <input name="question" value="{{ data.question }}" />
+            <input type="submit" value="Submit" />
+        </div>
+    
+    
+    </form>
+</div>
 
-    <div style="margin-top:20px;">
-        <input name="question" style="width: 500px;" value="{{ data.question }}" />
-        <input type="submit" value="Submit" />
-    </div>
-</form>
+
 {% endblock body %}
+
+<style>
+    .chat-window {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        min-height: 200px;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        padding: 10px;
+    }
+
+    .messages {
+        flex: 1;
+        overflow-y: scroll;
+        font-size: 16px;
+    }
+
+    .messages pre {
+        margin: 0;
+        line-height: 20px;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+    .message {
+        margin-top: 0;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+    .message-text {
+        background-color: #eee;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    .message-time {
+        font-size: 12px;
+        color: #888;
+        text-align: right;
+    }
+
+    .input-box {
+        display: flex;
+        margin-top: 10px;
+    }
+
+    input[type="text"] {
+        flex: 1;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        margin-right: 10px;
+    }
+
+    button {
+        border: none;
+        background-color: #007aff;
+        color: #fff;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+</style>

@@ -1,7 +1,6 @@
 from django.shortcuts import render
 import openai
 
-openai.api_key = "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"
 
 
 # Create your views here.
