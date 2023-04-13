@@ -2,31 +2,66 @@ import openai
 from django.http import JsonResponse
 from django.http import HttpResponseBadRequest
 import json
-from chat.models import SiteSetting
+import re
+from . import dataaccess
 
 
 def getApiKey():
-    settingItems = SiteSetting.objects.filter(
-        name="openai_api_key",
-    )
-    if len(settingItems) > 0:
-        openai_api_key = settingItems[0].value
-        return openai_api_key
-    raise Exception("Not found openai_api_key")
+    apikey = dataaccess.getSetting("openai_api_key")
+    return apikey
 
 
 openai.api_key = getApiKey()
 
 
+defaultOpenAIOption = {
+    "engine": "text-davinci-003",
+    "max_tokens": 1000,
+    "n": 1,
+    "stop": None,
+    "temperature": 0.5,
+}
+
+
+def is_number(string):
+    pattern = re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$")
+    return bool(pattern.match(string))
+
+
+def is_int(string):
+    pattern = re.compile(r"^[-+]?[0-9]*$")
+    return bool(pattern.match(string))
+
+
+def processNumber(dict):
+    result = {}
+    for k, v in dict.items():
+        if v == "None":
+            result[k] = None
+        elif is_int(v):
+            result[k] = int(v)
+        elif is_number(v):
+            result[k] = float(v)
+        else:
+            result[k] = v
+    return result
+
+
+def getOpenAIOption():
+    aiOption = dataaccess.getDictItems("openai_api_option")
+    print(aiOption)
+    option = {}
+    option.update(defaultOpenAIOption)
+    optionFromDb = processNumber(aiOption)
+    option.update(optionFromDb)
+    return option
+
+
 def generate_text(prompt):
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=1000,
-        n=1,
-        stop=None,
-        temperature=0.5,
-    )
+    option = getOpenAIOption()
+    option.update({"prompt": prompt})
+    print(option)
+    response = openai.Completion.create(**option)
     if response and len(response.choices) > 0:
         return response.choices[0].text
 

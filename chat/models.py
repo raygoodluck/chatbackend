@@ -54,5 +54,9 @@ class DictItemAdmin(admin.ModelAdmin):
     list_display = ("id", "parent", "name", "value", "sequence")
     list_filter = ("parent",)
     list_display_links = ("parent",)
-    list_editable = ("sequence",)
+    list_editable = (
+        "name",
+        "value",
+        "sequence",
+    )
     list_select_related = ("parent",)
